@@ -5,8 +5,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from .config import settings
-from .models import group  # noqa: F401 — registers Group models with Base.metadata
-from .routers import auth, workouts, groups
+from .models import group, feed  # noqa: F401 — registers models with Base.metadata
+from .routers import auth, workouts, groups, feed as feed_router
 
 app = FastAPI(title="VictoryLap API", version="0.1.0")
 
@@ -21,6 +21,7 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(workouts.router)
 app.include_router(groups.router)
+app.include_router(feed_router.router)
 
 _uploads_dir = Path(__file__).resolve().parents[1] / "uploads"
 _uploads_dir.mkdir(exist_ok=True)

@@ -15,6 +15,9 @@ class Settings(BaseSettings):
     cloudinary_api_key: str = ""
     cloudinary_api_secret: str = ""
 
+    # Anthropic (for Victory Feed generation)
+    anthropic_api_key: str = ""
+
     class Config:
         env_file = ".env"
 

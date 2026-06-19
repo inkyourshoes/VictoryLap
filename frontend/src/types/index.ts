@@ -76,6 +76,14 @@ export interface GroupDetail extends Group {
   goals: GroupGoal[];
 }
 
+export interface FeedItem {
+  entry_type: string;
+  label: string;
+  title: string;
+  content: string;
+  period: string;
+}
+
 export interface WorkoutCreatePayload {
   title: string;
   notes?: string;

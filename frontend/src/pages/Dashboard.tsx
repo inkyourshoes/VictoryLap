@@ -1,15 +1,22 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getWorkouts, deleteWorkout } from '../api/workouts';
-import type { Workout } from '../types';
+import { getFeed } from '../api/feed';
+import type { Workout, FeedItem } from '../types';
 import { useAuth } from '../context/AuthContext';
 
 export default function Dashboard() {
   const [workouts, setWorkouts] = useState<Workout[]>([]);
+  const [feed, setFeed] = useState<FeedItem[]>([]);
+  const [feedLoading, setFeedLoading] = useState(true);
   const { logout } = useAuth();
 
   useEffect(() => {
     getWorkouts().then(setWorkouts).catch(console.error);
+    getFeed()
+      .then(setFeed)
+      .catch(console.error)
+      .finally(() => setFeedLoading(false));
   }, []);
 
   async function handleDelete(id: string) {
@@ -28,6 +35,30 @@ export default function Dashboard() {
         </div>
       </div>
 
+      {/* ── Victory Feed ── */}
+      <h2 style={{ marginTop: 32 }}>Victory Feed</h2>
+      {feedLoading ? (
+        <p className="dim">Loading today's feed...</p>
+      ) : (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: 12, marginBottom: 32 }}>
+          {feed.map((item) => (
+            <div key={item.entry_type} className="card" style={{ margin: 0 }}>
+              <div style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--accent-light)', marginBottom: 6 }}>
+                {item.label}
+              </div>
+              <div style={{ fontWeight: 'bold', color: 'var(--text)', marginBottom: 8, fontSize: '1rem' }}>
+                {item.title}
+              </div>
+              <p className="dim" style={{ fontSize: '0.85rem', margin: 0, lineHeight: 1.5 }}>
+                {item.content}
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* ── Workouts ── */}
+      <h2>My Workouts</h2>
       {workouts.length === 0 ? (
         <p className="dim">No workouts yet. Hit the yard.</p>
       ) : (
