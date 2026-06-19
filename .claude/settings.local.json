@@ -9,7 +9,10 @@
       "Bash(brew list:*)",
       "Bash(conda info:*)",
       "Read(//Users/inkyourshoes/Library/Python/**)",
-      "Bash(brew search:*)"
+      "Bash(brew search:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
     ]
   }
 }
