@@ -1,0 +1,6 @@
+@VictoryLap_HostAddress = http://localhost:5212
+
+GET {{VictoryLap_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

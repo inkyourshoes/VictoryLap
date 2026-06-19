@@ -1,0 +1,21 @@
+bin/
+obj/
+/packages/
+riderModule.iml
+/_ReSharper.Caches/
+
+# Python
+backend/.venv/
+backend/__pycache__/
+backend/**/__pycache__/
+backend/*.pyc
+backend/uploads/
+
+# Environment files
+backend/.env
+frontend/.env.local
+frontend/.env.production.local
+
+# Node
+frontend/node_modules/
+frontend/dist/
