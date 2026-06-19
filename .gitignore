@@ -1,17 +1,30 @@
+# .NET / Rider
 bin/
 obj/
 /packages/
 riderModule.iml
 /_ReSharper.Caches/
+.idea/
 
 # Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+.pdm-python
 backend/.venv/
 backend/__pycache__/
 backend/**/__pycache__/
-backend/*.pyc
 backend/uploads/
+.venv
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
 
 # Environment files
+.env
+.envrc
 backend/.env
 frontend/.env.local
 frontend/.env.production.local
@@ -19,3 +32,11 @@ frontend/.env.production.local
 # Node
 frontend/node_modules/
 frontend/dist/
+node_modules/
+dist/
+
+# Misc
+.DS_Store
+*.log
+.coverage
+htmlcov/
