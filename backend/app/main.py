@@ -31,3 +31,8 @@ app.mount("/uploads", StaticFiles(directory=str(_uploads_dir)), name="uploads")
 @app.get("/health")
 async def health():
     return {"status": "ok"}
+
+
+@app.get("/")
+async def root():
+    return {"message": "VictoryLap API", "version": "0.1.0"}
