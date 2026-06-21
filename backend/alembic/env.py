@@ -9,11 +9,18 @@ from alembic import context
 # Import all models so they register with Base.metadata
 from app.models import user, workout, goal, group, feed  # noqa: F401
 from app.database import Base
+from app.config import settings
 
 config = context.config
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
+
+# Prefer the runtime DATABASE_URL (e.g. Railway's Postgres) over the
+# placeholder in alembic.ini. Normalize to the asyncpg driver, matching
+# app/database.py.
+_db_url = settings.database_url.replace("postgresql://", "postgresql+asyncpg://")
+config.set_main_option("sqlalchemy.url", _db_url)
 
 target_metadata = Base.metadata
 
