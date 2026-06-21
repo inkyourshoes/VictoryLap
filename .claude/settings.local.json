@@ -12,7 +12,17 @@
       "Bash(brew search:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(git checkout *)",
+      "Bash(.venv/bin/python --version)",
+      "Bash(.venv/bin/python -c \"import alembic, fastapi, sqlalchemy, asyncpg; print\\('deps OK'\\)\")",
+      "Bash(DATABASE_URL=\"postgresql://testuser:testpass@db.example.com:5432/proddb\" .venv/bin/alembic upgrade head --sql)",
+      "Bash(gh pr create --base main --head railway-vercel-deploy-fixes --title 'fix: enable Railway/Vercel deploy \\(alembic DATABASE_URL + SPA rewrite\\)' --body ' *)",
+      "Bash(gh pr *)",
+      "Bash(git pull *)",
+      "Bash(backend/.venv/bin/python -c \"import secrets; print\\(secrets.token_hex\\(32\\)\\)\")",
+      "Bash(npx tsc *)",
+      "Bash(echo \"=== exit: $? ===\")"
     ]
   }
 }
