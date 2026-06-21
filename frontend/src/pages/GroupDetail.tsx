@@ -69,7 +69,7 @@ export default function GroupDetailPage() {
     setUploading(true);
     try {
       const result = await uploadGroupAttachment(id, file);
-      setPendingAttachment(result);
+      setPendingAttachment({ url: result.attachment_url, type: result.attachment_type });
     } catch {
       alert('Upload failed');
     } finally {
@@ -241,22 +241,22 @@ export default function GroupDetailPage() {
             {m.content && <div style={{ marginTop: 2 }}>{m.content}</div>}
             {m.attachment_url && m.attachment_type === 'image' && (
               <img
-                src={`{resolveAttachmentUrl(m.attachment_url!)}`}
+                src={resolveAttachmentUrl(m.attachment_url!)}
                 alt="attachment"
                 style={{ marginTop: 6, maxWidth: '100%', maxHeight: 320, display: 'block', cursor: 'pointer' }}
-                onClick={() => window.open(`{resolveAttachmentUrl(m.attachment_url!)}`, '_blank')}
+                onClick={() => window.open(resolveAttachmentUrl(m.attachment_url!), '_blank')}
               />
             )}
             {m.attachment_url && m.attachment_type === 'video' && (
               <video
-                src={`{resolveAttachmentUrl(m.attachment_url!)}`}
+                src={resolveAttachmentUrl(m.attachment_url!)}
                 controls
                 style={{ marginTop: 6, maxWidth: '100%', maxHeight: 320, display: 'block' }}
               />
             )}
             {m.attachment_url && m.attachment_type === 'file' && (
               <a
-                href={`{resolveAttachmentUrl(m.attachment_url!)}`}
+                href={resolveAttachmentUrl(m.attachment_url!)}
                 target="_blank"
                 rel="noreferrer"
                 style={{ display: 'inline-block', marginTop: 6, fontSize: '0.85rem' }}
@@ -272,7 +272,7 @@ export default function GroupDetailPage() {
       {pendingAttachment && (
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 0', fontSize: '0.85rem', color: 'var(--accent-light)' }}>
           {pendingAttachment.type === 'image' && (
-            <img src={`{resolveAttachmentUrl(pendingAttachment.url)}`} alt="preview" style={{ height: 48, objectFit: 'cover' }} />
+            <img src={resolveAttachmentUrl(pendingAttachment.url)} alt="preview" style={{ height: 48, objectFit: 'cover' }} />
           )}
           {pendingAttachment.type !== 'image' && <span>Attachment ready</span>}
           <button
