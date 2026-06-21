@@ -9,7 +9,12 @@ export default function Dashboard() {
   const [workouts, setWorkouts] = useState<Workout[]>([]);
   const [feed, setFeed] = useState<FeedItem[]>([]);
   const [feedLoading, setFeedLoading] = useState(true);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
   const { logout } = useAuth();
+
+  function toggleExpanded(id: string) {
+    setExpandedId((prev) => (prev === id ? null : id));
+  }
 
   useEffect(() => {
     getWorkouts().then(setWorkouts).catch(console.error);
@@ -63,21 +68,63 @@ export default function Dashboard() {
         <p className="dim">No workouts yet. Hit the yard.</p>
       ) : (
         <ul>
-          {workouts.map((w) => (
-            <li key={w.id}>
-              <div className="flex-row" style={{ justifyContent: 'space-between' }}>
-                <div>
-                  <strong style={{ color: 'var(--text)', fontSize: '1rem' }}>{w.title}</strong>
-                  <span className="dim" style={{ marginLeft: 10 }}>
-                    {new Date(w.performed_at).toLocaleDateString()} · {w.exercises.length} exercise{w.exercises.length !== 1 ? 's' : ''}
-                  </span>
+          {workouts.map((w) => {
+            const expanded = expandedId === w.id;
+            return (
+              <li key={w.id}>
+                <div className="flex-row" style={{ justifyContent: 'space-between' }}>
+                  <div
+                    onClick={() => toggleExpanded(w.id)}
+                    style={{ cursor: 'pointer', flex: 1 }}
+                    role="button"
+                    aria-expanded={expanded}
+                  >
+                    <span className="dim" style={{ marginRight: 8 }}>{expanded ? '▾' : '▸'}</span>
+                    <strong style={{ color: 'var(--text)', fontSize: '1rem' }}>{w.title}</strong>
+                    <span className="dim" style={{ marginLeft: 10 }}>
+                      {new Date(w.performed_at).toLocaleDateString()} · {w.exercises.length} exercise{w.exercises.length !== 1 ? 's' : ''}
+                    </span>
+                  </div>
+                  <button className="danger" onClick={() => handleDelete(w.id)} style={{ padding: '4px 12px', fontSize: '0.75rem' }}>
+                    Delete
+                  </button>
                 </div>
-                <button className="danger" onClick={() => handleDelete(w.id)} style={{ padding: '4px 12px', fontSize: '0.75rem' }}>
-                  Delete
-                </button>
-              </div>
-            </li>
-          ))}
+
+                {expanded && (
+                  <div style={{ marginTop: 10, paddingLeft: 18 }}>
+                    {w.notes && <p className="dim" style={{ marginTop: 0, fontStyle: 'italic' }}>{w.notes}</p>}
+                    {w.exercises.length === 0 ? (
+                      <p className="dim">No exercises logged.</p>
+                    ) : (
+                      [...w.exercises]
+                        .sort((a, b) => a.order_index - b.order_index)
+                        .map((ex) => (
+                          <div key={ex.id} style={{ marginBottom: 12 }}>
+                            <strong style={{ color: 'var(--text)' }}>{ex.name}</strong>
+                            <table style={{ marginTop: 4 }}>
+                              <thead>
+                                <tr><th>Set</th><th>Reps</th><th>Weight (kg)</th></tr>
+                              </thead>
+                              <tbody>
+                                {[...ex.sets]
+                                  .sort((a, b) => a.set_number - b.set_number)
+                                  .map((s) => (
+                                    <tr key={s.id}>
+                                      <td>{s.set_number}</td>
+                                      <td>{s.reps ?? '—'}</td>
+                                      <td>{s.weight_kg ?? '—'}</td>
+                                    </tr>
+                                  ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        ))
+                    )}
+                  </div>
+                )}
+              </li>
+            );
+          })}
         </ul>
       )}
     </div>
