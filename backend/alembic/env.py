@@ -1,4 +1,5 @@
 import asyncio
+import os
 from logging.config import fileConfig
 
 from sqlalchemy.ext.asyncio import create_async_engine
@@ -16,10 +17,12 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# Prefer the runtime DATABASE_URL (e.g. Railway's Postgres) over the
-# placeholder in alembic.ini. Normalize to the asyncpg driver, matching
-# app/database.py.
-_db_url = settings.database_url.replace("postgresql://", "postgresql+asyncpg://")
+# Prefer DATABASE_PUBLIC_URL: its host resolves via public DNS during Railway's
+# build phase, where the private `*.railway.internal` host (used by DATABASE_URL)
+# is not reachable. Fall back to the configured DATABASE_URL otherwise. Normalize
+# to the asyncpg driver, matching app/database.py.
+_raw_url = os.getenv("DATABASE_PUBLIC_URL") or settings.database_url
+_db_url = _raw_url.replace("postgresql://", "postgresql+asyncpg://")
 config.set_main_option("sqlalchemy.url", _db_url)
 
 target_metadata = Base.metadata
